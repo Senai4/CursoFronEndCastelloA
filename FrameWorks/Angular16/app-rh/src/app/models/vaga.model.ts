@@ -6,78 +6,68 @@ export class Vaga {
   // private descricao: string;
   // private salario:number;
 
-  // constructor(id:number, nome:string, foto:string, descricao:string, salario:number){
+  // constructor(id:number, nome:string, foto:string, descricao:string, salario:number ){
   //   this.id = id,
   //   this.nome = nome,
   //   this.foto = foto,
-  //   this.descricao = descricao,
-  //   this.salario = salario;
+  //   this.descricao = descricao;
+  //   this.salario = salario
   // }
 
-  //método abreviado de criação de uma classe
+  // metodo abreviado de criação de uma classe
   constructor(
-    private id: number,
-    private nome: string,
-    private foto: string,
-    private descricao: string,
-    private salario: number
+    private _id: number,
+    private _nome: string,
+    private _foto: string,
+    private _descricao: string,
+    private _salario: number
   ) {}
 
-  //métodos publicos(get set)
-  public getId(): number {
-    return this.id;
+  // métodos publicos( get set)
+  public get salario(): number {
+    return this._salario;
   }
-
-  //Nome
-  getNome(): string {
-    return this.nome;
+  public set salario(value: number) {
+    this._salario = value;
   }
-  setNome(nome: string): void {
-    this.nome = nome;
+  public get descricao(): string {
+    return this._descricao;
   }
-
-  //Foto
-  getfoto(): string {
-    return this.foto;
+  public set descricao(value: string) {
+    this._descricao = value;
   }
-  setfoto(foto: string): void {
-    this.foto = foto;
+  public get foto(): string {
+    return this._foto;
   }
-
-  //Descrição
-  getdescricao(): string {
-    return this.descricao;
+  public set foto(value: string) {
+    this._foto = value;
   }
-  setdescricao(descricao: string): void {
-    this.descricao = descricao;
+  public get nome(): string {
+    return this._nome;
   }
-
-  //Salário
-  getsalario(): number {
-    return this.salario;
+  public set nome(value: string) {
+    this._nome = value;
   }
-  setsalario(salario: number): void {
-    this.salario = salario;
+  public get id(): number {
+    return this._id;
+  }
+  public set id(value: number) {
+    this._id = value;
   }
 
   //conversão BD <=> obj
-  toMap(): { [key: string]: any } { //obj -> bd
+  toMap(): { [key: string]: any } {
+    //obj -> bd
     return {
       id: this.id,
       nome: this.nome,
       foto: this.foto,
       descricao: this.descricao,
-      salario: this.salario
-    }
+      salario: this.salario,
+    };
   }
   //fromMap : BD => obj
-  static fromMap(map:any):Vaga{
-    return new Vaga(
-      map.id,
-      map.nome,
-      map.foto,
-      map.descricao,
-      map.salario
-    );
+  static fromMap(map: any): Vaga {
+    return new Vaga(map.id, map.nome, map.foto, map.descricao, map.salario);
   }
 }
