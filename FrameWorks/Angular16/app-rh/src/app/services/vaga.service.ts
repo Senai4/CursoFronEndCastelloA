@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'; //solicitações http (GET/POST/PUT/DELETE)
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs';//classe que traduz a API <=> OBJ
 import { Vaga } from '../models/vaga.model';
 
 @Injectable({
@@ -15,7 +15,8 @@ export class VagaService {
 
   //métodos de Conexão
   //GET -> obtem a Lista de Vagas a partir da API
-  getVagas(): Observable<Vaga[]> {
+  //nomeDométodo
+  getVagas(): Observable<Vaga[]> { //biblioteca da rxjs -> traduz os dados da API <=> obj
     return this.http.get<Vaga[]>(this.apiUrl);
   }
 
@@ -32,6 +33,7 @@ export class VagaService {
 
   //DELETE -> Deleta vaga Existente na API
   deleteVaga(id: any): Observable<Vaga[]> {
+    //const apiUrlFinal = this.apiUrl+"/"+id;
     const apiUrlFinal = `${this.apiUrl}/${id}`;
     return this.http.delete<Vaga[]>(apiUrlFinal);
   }
