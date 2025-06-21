@@ -1,0 +1,108 @@
+.container {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+  border: 1px solid white;
+  border-radius: 20px;
+  background-color: #1E5470;
+}
+
+h2{
+    color: white;
+}
+.btn-primary {
+    background-color: #ffffff;
+    color: #1c5672;
+    font-weight: bold;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    width: 120px;
+    height: 50px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #6EC1D1;
+}
+
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 50px;
+}
+
+.curriculo-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.curriculo-card {
+  background: #f9f9f9;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+  transition: 0.3s;
+}
+
+.curriculo-card:hover {
+  transform: scale(1.02);
+}
+
+.curriculo-card h3 {
+  font-size: 16px;
+  color: #555;
+  margin-top: 10px;
+}
+
+.curriculo-card p {
+  font-size: 14px;
+  color: #333;
+}
+
+.curriculo-card a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn-edit,
+.btn-delete {
+  padding: 8px 15px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-edit {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-edit:hover {
+  background-color: #218838;
+}
+
+.btn-delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #c82333;
+}
+

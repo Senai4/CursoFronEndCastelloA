@@ -1,0 +1,44 @@
+<div class="form-container">
+  <h2>{{ isEdit ? 'Editar Currículo' : 'Novo Currículo' }}</h2>
+
+  <form>
+    <label for="formacao">Formação</label>
+    <textarea
+      id="formacao"
+      name="formacao"
+      [(ngModel)]="curriculo.formacao"
+      required
+    ></textarea>
+
+    <label for="experiencia">Experiência</label>
+    <textarea
+      id="experiencia"
+      name="experiencia"
+      [(ngModel)]="curriculo.experiencia"
+      required
+    ></textarea>
+
+    <label for="habilidades">Habilidades</label>
+    <textarea
+      id="habilidades"
+      name="habilidades"
+      [(ngModel)]="curriculo.habilidades"
+      required
+    ></textarea>
+
+    <label for="linkedin">LinkedIn</label>
+    <input
+      type="text"
+      id="linkedin"
+      name="linkedin"
+      [(ngModel)]="curriculo.linkedin"
+      required
+    />
+
+    <div class="actions">
+      <button class="btn-edit" type="button" (click)="salvar()">
+        {{ isEdit ? 'Atualizar' : 'Salvar' }}
+      </button>
+    </div>
+  </form>
+</div>

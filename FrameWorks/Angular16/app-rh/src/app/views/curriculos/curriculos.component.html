@@ -1,1 +1,28 @@
-<p>curriculos works!</p>
+<div class="container">
+  <div class="header">
+    <h2>Meus Currículos</h2>
+    <button class="btn-primary" routerLink="/curriculos/novo">Adicionar Novo</button>
+  </div>
+
+  <div class="curriculo-list">
+    <div *ngFor="let curriculo of curriculos" class="curriculo-card">
+      <h3>Formação</h3>
+      <p>{{ curriculo.formacao }}</p>
+
+      <h3>Experiência</h3>
+      <p>{{ curriculo.experiencia }}</p>
+
+      <h3>Habilidades</h3>
+      <p>{{ curriculo.habilidades }}</p>
+
+      <h3>LinkedIn</h3>
+      <p><a [href]="curriculo.linkedin" target="_blank">{{ curriculo.linkedin }}</a></p>
+
+      <div class="actions">
+        <button class="btn-edit" [routerLink]="['/curriculos/editar', curriculo.id]">Editar</button>
+        <button class="btn-delete" (click)="excluir(curriculo.id)">Excluir</button>
+      </div>
+    </div>
+  </div>
+</div>
+

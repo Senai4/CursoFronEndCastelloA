@@ -22,12 +22,21 @@
       "salario": 10000
     },
     {
-      "id": 4,
+      "id": "4",
       "nome": "Engenheiro de Cloud",
       "foto": "foto4.jpg",
       "descricao": "Arquitetura de nuvens e serviços online",
       "salario": 8000
     }
   ],
-  "curriculos": []
+  "curriculos": [
+    {
+      "id": "1",
+      "userId": 101,
+      "formacao": "Bacharel em Sistemas de Informação",
+      "experiencia": "2 anos na empresa X",
+      "habilidades": "JavaScript, React, Node.js",
+      "linkedin": "https://linkedin.com/in/usuario"
+    }
+  ]
 }

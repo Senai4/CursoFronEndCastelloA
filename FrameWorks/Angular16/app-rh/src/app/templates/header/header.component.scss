@@ -3,13 +3,13 @@
   justify-content: space-around;
   align-items: center;
   padding: 1rem 1.5rem;
-  background-color: #f8f8f8;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-  font-size: 2rem;
+  background-color: #1E5470;
+  font-size: 1.5rem;
+  border: 1px solid white;
 
   a {
       text-decoration: none; //remove o sublinhado
-      color: #777;
+      color: white;
       font-weight: bold;
     }
 
@@ -18,12 +18,12 @@
       gap: 1.5rem;
 
       .navLink{
-        color: #0077ff;
+        color: white;
         padding: 0.5rem 0;
         transition: color 0.3s ease;
 
         &:hover{
-          color: #0056b3;
+          color: #6EC1D1;
         }
       }
     }

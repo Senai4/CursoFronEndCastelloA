@@ -11,6 +11,7 @@ import { HomeComponent } from './views/home/home.component';
 import { PainelVagasComponent } from './views/painel-vagas/painel-vagas.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { CurriculoFormComponent } from './views/curriculo-form/curriculo-form.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { FormsModule } from '@angular/forms';
     VagasComponent,
     CurriculosComponent,
     HomeComponent,
-    PainelVagasComponent
+    PainelVagasComponent,
+    CurriculoFormComponent
   ],
   imports: [
     BrowserModule,
