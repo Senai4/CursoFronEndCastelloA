@@ -1,4 +1,4 @@
-# Sistema de Getão de Manutenção (SGM) - Formativa
+# Sistema de Gestão de Manutenção (SGM) - Formativa
 
 ## Briefing
 O projeto consiste no desenvolvimento de um Sistema de Gestão de Manutenção (SGM) no formato de uma aplicação web. O objetivo é centralizar e otimizar o controle das atividades de manutenção de máquinas e equipamentos de uma empresa. A plataforma permitirá o cadastro de equipamentos, agendamento de manutenções preventivas e corretivas, e o gerenciamento de ordens de serviço.
@@ -43,16 +43,13 @@ Descreve o Comportamento das Entidades do Sistema
     - Atributos: id, nome, email, senha, função
     - Métodos: create, read, update, delete, login, logout
 
-
 - Equipamentos (Equipment/Equipamento)
-    - Atributos: id, modelo, marca, decricao, status, 
-    localizacao, numeroSerie
+    - Atributos: id, modelo, marca, descricao, status, localizacao, numeroSerie
     - Métodos: CRUD
 
 - Ordem de Serviço (ServiceOrder/OrdemServico)
-   - Atributos: id, titulo, descricao, tipo, status,
-    idTecnico, idEquipamento
-   - Métodos: CRUD
+    - Atributos: id, titulo, descricao, tipo, status, idTecnico, idEquipamento
+    - Métodos: CRUD
 
 ```mermaid
 
@@ -103,6 +100,7 @@ classDiagram
     Equipamento "1" -- "0..*" OrdemServico : associado a >
 
 ```
+
 2. ### Caso de Uso
 Ilustra as interações dos diferentes tipos de usuários(Atores) com as funcionalidades do sistema
 - Técnico: Gerenciar Ordem de Serviço (CRUD) e acessar o DashBoard
@@ -123,9 +121,9 @@ graph TD
         caso5([Acessar o Dasboard])
     end
 
-    Tecnico([Técnico de Manutenção])
-    Gerente([Gerente de Manutenção])
-    Admin([Administrador do Sistema])
+    Tecnico([👷 Técnico de Manutenção])
+    Gerente([📋 Gerente de Manutenção])
+    Admin([⚙️ Administrador do Sistema])
 
     Tecnico --> caso1
     Tecnico --> caso2
@@ -165,7 +163,7 @@ graph TD
     B --> C[Preenche Email e Senha]
     C --> D{Validar as Credenciais}
     D --> SIM --> E[Gerar token] --> F[DashBoard]
-    D --> NÃO --> G[Mensagem de Erro] --> B
+    D --> NÃO --> G[MEnsagem de Erro] --> B
 
 ```
 
@@ -208,3 +206,9 @@ A tabela abaixo apresenta os riscos identificados no projeto **SGM**, organizado
 ---
 
 ## Prototipagem
+
+- Colocar o Link da Prototipagem
+
+- 
+
+## Codificação
