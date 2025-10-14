@@ -49,7 +49,6 @@ export default function DashboardPage(){
     return(
         <div>
             <header>
-                <h1>Bem-Vindo</h1>
                 <button onClick={handleLogout}>Logout</button>
             </header>
             <main>

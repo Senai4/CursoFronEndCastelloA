@@ -38,22 +38,17 @@ export default function DashboardAdmin() {
   const [ordens, setOrdens] = useState([]);
   const [filtro, setFiltro] = useState("Abertas"); // Filtro inicial
 
-  // Simula a busca de dados quando o componente é montado
   useEffect(() => {
-    // No futuro, aqui você fará a chamada para sua API
     setOrdens(mockData);
   }, []);
 
-  // Filtra as ordens com base no status selecionado
   const ordensFiltradas = ordens.filter((ordem) => ordem.status === filtro);
 
   return (
     <div className="dashboard-container">
       <header className="dashboard-header">
         <div className="logo-container">
-          {/* Adicione sua logo aqui */}
-          <img src="/logo-sgm.png" alt="Logo SGM" className="logo-img" />
-          <span>SGM</span>
+          <img src="/logo-sgm.png" alt="Logo" className="logo-img" />
         </div>
         <div className="user-role">ADM</div>
       </header>
@@ -104,8 +99,8 @@ export default function DashboardAdmin() {
                 <span>{ordem.dataLimite}</span>
                 <span className="acoes-buttons">
                   {/* Adicione as funções de editar e criar nos botões */}
-                  <button className="acao-btn edit-btn">✏️</button>
-                  <button className="acao-btn create-btn">➕</button>
+                  <button className="acaoBtn createBtn">➕</button>
+                  <button className="acaoBtn deleteBtn">🗑️</button>
                 </span>
               </div>
             ))
