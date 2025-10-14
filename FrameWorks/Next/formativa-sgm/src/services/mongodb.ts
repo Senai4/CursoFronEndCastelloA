@@ -1,3 +1,5 @@
+//componente de conexão com o banco de dados
+
 import mongoose from "mongoose";
 
 //componentes responsavel por estabelece a conexão com o mongoDB
