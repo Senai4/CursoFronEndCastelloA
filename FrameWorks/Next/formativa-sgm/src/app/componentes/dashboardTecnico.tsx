@@ -1,88 +1,102 @@
-// Em app/components/dashboardGerente.tsx
-
 "use client";
-import React, { useState, useEffect } from 'react';
-import './dashboardGerente.css';
+import React, { useState, useEffect } from "react";
+import "./dashboardAdmin.css";
 
-interface Ordem {
-  id: number;
-  titulo: string;
-  equipamento: string;
-  status: 'Abertas' | 'Andamento' | 'Concluídas';
-  dataLimite: string;
+// Interface para definir a estrutura de uma ordem de serviço
+interface OrdemServico {
+    id: number;
+    titulo: string;
+    equipamento: string;
+    status: string;
+    dataLimite: string;
 }
 
-const mockData: Ordem[] = [
-    { id: 1, titulo: 'Manutenção Preventiva Motor A', equipamento: 'Motor A-01', status: 'Abertas', dataLimite: '20/10/2025' },
-    { id: 2, titulo: 'Verificar ruído na esteira', equipamento: 'Esteira B-03', status: 'Andamento', dataLimite: '15/10/2025' },
+// Props interface
+interface DashboardTecnicoProps {
+    onLogout: () => void;
+}
+
+const mockData: OrdemServico[] = [
+    { id: 1, titulo: "Manutenção Preventiva Motor A", equipamento: "Motor A-01", status: "Abertas", dataLimite: "2025-10-20" },
+    { id: 2, titulo: "Verificar ruído na esteira", equipamento: "Esteira B-03", status: "Andamento", dataLimite: "2025-10-15" },
+    { id: 5, titulo: "Trocar filtro de ar", equipamento: "Compressor C-04", status: "Abertas", dataLimite: "2025-10-22" },
 ];
 
-export default function DashboardGerente() {
-    const [ordens, setOrdens] = useState<Ordem[]>([]);
-    const [filtro, setFiltro] = useState<Ordem['status']>('Abertas');
+export default function DashboardTecnico({ onLogout }: DashboardTecnicoProps) {
+    const [ordens, setOrdens] = useState<OrdemServico[]>([]);
+    const [filtro, setFiltro] = useState("Abertas");
 
     useEffect(() => {
         setOrdens(mockData);
     }, []);
 
-    const ordensFiltradas = ordens.filter(ordem => ordem.status === filtro);
-
-    // FUNÇÕES DE AÇÃO PARA O TÉCNICO
-    const handleEditar = (idDaOrdem: number) => {
-        const novoTitulo = window.prompt("Adicionar nota ou atualizar título:", ordens.find(o => o.id === idDaOrdem)?.titulo);
-        if (novoTitulo) {
-            const listaAtualizada = ordens.map(ordem => 
-                ordem.id === idDaOrdem ? { ...ordem, titulo: novoTitulo } : ordem
-            );
-            setOrdens(listaAtualizada);
-        }
+    const handleStatusChange = (idDaOrdem: number, novoStatus: string) => {
+        setOrdens(
+            ordens.map((ordem) =>
+                ordem.id === idDaOrdem ? { ...ordem, status: novoStatus } : ordem
+            )
+        );
     };
-    
+
+    const ordensFiltradas = ordens.filter((ordem) => ordem.status === filtro);
+
     return (
-        <div className="dashboardContainer">
-            <header className="dashboardHeader">
-                <div className="logoContainer">
-                    <img src="/logo-sgm.png" alt="Logo" className="logoImg" />
+        <div className="dashboard-container">
+            <header className="dashboard-header">
+                <div className="logo-container">
+                    <span className="header-title">Sistema de Gestão de Manutenção</span>
                 </div>
-                <div className="userRole">
-                    Gerente
+                <div className="user-info">
+                    <span className="user-role">TÉCNICO</span>
+                    <button onClick={onLogout} className="logout-button">Logout</button>
                 </div>
             </header>
 
-            <main className="dashboardMain">
-                <div className="statusFilters">
-                    {/* Para classes dinâmicas, a lógica muda um pouco */}
-                    <button onClick={() => setFiltro('Abertas')} className={`filterButton ${filtro === 'Abertas' ? 'active' : ''}`}>Abertas</button>
-                    <button onClick={() => setFiltro('Andamento')} className={`filterButton ${filtro === 'Andamento' ? 'active' : ''}`}>Andamento</button>
-                    <button onClick={() => setFiltro('Concluídas')} className={`filterButton ${filtro === 'Concluídas' ? 'active' : ''}`}>Concluídas</button>
+            <main className="dashboard-main">
+                <div className="toolbar">
+                    <div className="status-filters">
+                        <button onClick={() => setFiltro("Abertas")} className={`filter-button ${filtro === "Abertas" ? "active" : ""}`}>Abertas</button>
+                        <button onClick={() => setFiltro("Andamento")} className={`filter-button ${filtro === "Andamento" ? "active" : ""}`}>Andamento</button>
+                        <button onClick={() => setFiltro("Concluídas")} className={`filter-button ${filtro === "Concluídas" ? "active" : ""}`}>Concluídas</button>
+                    </div>
                 </div>
 
-                <div className="ordensLista">
-                    <div className="ordemCabecalho">
-                        <span>Id</span>
+                <div className="ordens-lista">
+                    <div className="ordem-cabecalho">
                         <span>Título</span>
                         <span>Equipamento</span>
-                        <span>Status</span>
                         <span>Data Limite</span>
-                        <span>Ações</span>
+                        <span>Status</span>
                     </div>
-                    
-                    {ordensFiltradas.map((ordem) => (
-                        <div key={ordem.id} className="ordemItem">
-                            <span>{ordem.id}</span>
-                            <span>{ordem.titulo}</span>
-                            <span>{ordem.equipamento}</span>
-                            <span>{ordem.status}</span>
-                            <span>{ordem.dataLimite}</span>
-                            <span className="acoesButtons">
-                                <button className="acaoBtn deleteBtn">🗑️</button>
-                                <button className="acaoBtn createBtn">➕</button>
-                            </span>
+
+                    {ordensFiltradas.length > 0 ? (
+                        ordensFiltradas.map((ordem) => (
+                            <div key={ordem.id} className="ordem-item tecnico-item">
+                                <span data-label="Título:">{ordem.titulo}</span>
+                                <span data-label="Equipamento:">{ordem.equipamento}</span>
+                                <span data-label="Data Limite:">{new Date(ordem.dataLimite).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</span>
+                                <span data-label="Status:">
+                                    <select
+                                        className="status-select"
+                                        value={ordem.status}
+                                        onChange={(e) => handleStatusChange(ordem.id, e.target.value)}
+                                        aria-label="Alterar status da ordem de serviço"
+                                        title="Status da ordem de serviço">
+                                        <option value="Abertas">Aberta</option>
+                                        <option value="Andamento">Em Andamento</option>
+                                        <option value="Concluídas">Concluída</option>
+                                    </select>
+                                </span>
+
+                            </div>
+                        ))
+                    ) : (
+                        <div className="sem-ordens">
+                            <p>Nenhuma ordem de serviço encontrada para este status.</p>
                         </div>
-                    ))}
+                    )}
                 </div>
             </main>
-            <footer className="dashboardFooter"></footer>
         </div>
     );
 }

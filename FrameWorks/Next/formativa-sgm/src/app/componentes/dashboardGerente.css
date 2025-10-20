@@ -1,116 +1,67 @@
-/* Conteúdo para app/components/dashboardGerente.css */
+@import url('./DashboardAdmin.css');
 
-.dashboardContainer {
+.view-selector {
     display: flex;
-    flex-direction: column;
-    height: 100vh;
-    background-color: #f0f2f5;
-    color: #333;
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: 2rem;
 }
 
-.dashboardHeader,
-.dashboardFooter {
-    background-color: var(--primary-blue);
-    color: white;
-    padding: 1rem 2rem;
-    display: flex;
-    align-items: center;
-}
-
-.dashboardHeader {
-    justify-content: space-between;
-}
-
-.logoContainer {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    font-weight: bold;
-    font-size: 1.8rem;
-}
-
-.logoImg {
-    height: 40px;
-}
-
-.userRole {
-    font-size: 1.5rem;
-    font-weight: 300;
-}
-
-.dashboardFooter {
-    font-size: 0.9rem;
-    color: #ddd;
-}
-
-.dashboardMain {
-    padding: 2rem;
-    flex-grow: 1;
-}
-
-.statusFilters {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-bottom: 2.5rem;
-}
-
-.filterButton {
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 1rem;
-    width: 180px;
+.view-selector button {
+    background-color: transparent;
+    border: none;
+    padding: 1rem 1.5rem;
     font-size: 1.1rem;
+    font-weight: 500;
+    color: #6c757d;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
+    position: relative;
+    transition: color 0.2s ease-in-out;
 }
 
-.filterButton.active {
-    background-color: var(--secondary-blue);
-    color: white;
-    border-color: var(--primary-blue);
-    font-weight: bold;
+.view-selector button:hover {
+    color: var(--primary-blue);
 }
 
-.ordensLista {
-    background-color: white;
-    border: 1px solid #ddd;
+.view-selector button.active {
+    color: var(--primary-blue);
+    font-weight: 600;
+}
+
+.view-selector button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--primary-blue);
+}
+
+.equipamentos-lista {
+    background-color: var(--white-color);
     border-radius: 8px;
     padding: 1rem;
+    box-shadow: var(--box-shadow);
 }
 
-.ordemCabecalho,
-.ordemItem {
+.equipamento-cabecalho,
+.equipamento-item {
     display: grid;
-    grid-template-columns: 50px 2.5fr 1.5fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr 1fr 1fr;
     gap: 1rem;
     padding: 1rem;
     align-items: center;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid var(--border-color);
 }
 
-.ordemItem:last-child {
+.equipamento-cabecalho {
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    color: #6c757d;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.equipamento-item:last-child {
     border-bottom: none;
-}
-
-.ordemCabecalho {
-    font-weight: bold;
-    color: #555;
-    border-bottom: 2px solid #ddd;
-}
-
-.acoesButtons {
-    display: flex;
-    gap: 10px;
-}
-
-.acaoBtn {
-    background-color: var(--primary-blue);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 12px;
-    cursor: pointer;
-    font-size: 1.1rem;
 }

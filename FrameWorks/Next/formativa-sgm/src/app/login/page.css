@@ -1,5 +1,5 @@
 :root {
-    --primary-color: #2c3e50;
+    --primary-color: #005f73;
     /* Azul escuro para o botão e borda */
     --border-color: #bdc3c7;
     /* Cinza claro para a borda dos inputs */
@@ -103,5 +103,7 @@ body {
 }
 
 .submit-btn:hover {
-    background-color: #34495e;
+    background-color: white;
+    border: solid 2px var(--primary-color);
+    color: var(--primary-color);
 }

@@ -1,126 +1,25 @@
-/* Estrutura Principal */
-.dashboardContainer {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    background-color: #f0f2f5;
-    color: #333;
+/* Importa todos os estilos que já tem */
+@import url('./DashboardAdmin.css');
+
+/* Ajusta o grid da lista para o técnico (sem a coluna Ações) */
+.tecnico-item {
+    grid-template-columns: 2.5fr 2fr 1.5fr 2fr;
 }
 
-/* Cabeçalho e Rodapé */
-.dashboardHeader,
-.dashboardFooter {
-    background-color: var(--primary-blue);
-    color: white;
-    padding: 1rem 2rem;
-    display: flex;
-    align-items: center;
-}
-
-.dashboardHeader {
-    justify-content: space-between;
-}
-
-.logoContainer {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    font-weight: bold;
-    font-size: 1.8rem;
-}
-
-.logoImg {
-    height: 40px;
-}
-
-.userRole {
-    font-size: 1.5rem;
-    font-weight: 300;
-}
-
-.dashboardFooter {
-    font-size: 0.9rem;
-    color: #ddd;
-}
-
-/* Conteúdo Principal */
-.dashboardMain {
-    padding: 2rem;
-    flex-grow: 1;
-}
-
-/* Botões de Filtro de Status */
-.statusFilters {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-bottom: 2.5rem;
-}
-
-.filterButton {
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 1rem;
-    width: 180px;
-    text-align: center;
-    font-size: 1.1rem;
+/* Estilo para o seletor de status na lista */
+.status-select {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    background-color: var(--light-gray);
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
 }
 
-.filterButton.active {
-    background-color: var(--secondary-blue);
-    color: white;
-    border-color: var(--primary-blue);
-    font-weight: bold;
-}
-
-/* Lista de Ordens de Serviço */
-.ordensLista {
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 1rem;
-}
-
-.ordemCabecalho,
-.ordemItem {
-    display: grid;
-    grid-template-columns: 50px 2.5fr 1.5fr 1fr 1fr 1fr;
-    gap: 1rem;
-    padding: 1rem;
-    align-items: center;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.ordemItem:last-child {
-    border-bottom: none;
-}
-
-.ordemCabecalho {
-    font-weight: bold;
-    color: #555;
-    border-bottom: 2px solid #ddd;
-}
-
-.acoesButtons {
-    display: flex;
-    gap: 10px;
-}
-
-.acaoBtn {
-    background-color: var(--primary-blue);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 12px;
-    cursor: pointer;
-    font-size: 1.1rem;
-}
-
-.deleteBtn {
-    background-color: #c0392b;
-    /* Vermelho */
+/* Em telas pequenas, o grid já é de 1 coluna, então não precisa de ajuste */
+@media (max-width: 768px) {
+    .tecnico-item {
+        grid-template-columns: 1fr;
+    }
 }

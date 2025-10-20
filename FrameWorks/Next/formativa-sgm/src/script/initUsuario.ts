@@ -1,5 +1,3 @@
-// Em seu arquivo initUsuario.ts
-
 import Usuario from "@/models/Usuario";
 import connectMongo from "@/services/mongodb";
 
