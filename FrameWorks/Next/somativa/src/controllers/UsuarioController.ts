@@ -1,60 +1,67 @@
-import dbConnect from '@/services/mongodb';
-import Usuario, { IUsuario } from '@/models/Usuario';
-import jwt from 'jsonwebtoken';
+// src/controllers/UsuarioController.ts
 
-// Função para registrar um novo usuário
-export const registerUser = async (data: Pick<IUsuario, 'nome' | 'email' | 'senha' | 'funcao'>) => {
+import dbConnect from "@/services/mongodb";
+import Usuario, { IUsuario } from "@/models/Usuario";
+// import jwt from 'jsonwebtoken'; // 1. REMOVA a biblioteca 'jsonwebtoken'
+import { SignJWT } from "jose"; // 2. IMPORTE 'jose' no lugar
+
+// Função de registro (não mudou, está perfeita)
+export const registerUser = async (
+  data: Pick<IUsuario, "nome" | "email" | "senha" | "funcao">
+) => {
   await dbConnect();
-
-  // 1. Verifica se o email já está em uso
   const existingUser = await Usuario.findOne({ email: data.email });
   if (existingUser) {
-    throw new Error('Este endereço de e-mail já está cadastrado.');
+    throw new Error("Este endereço de e-mail já está cadastrado.");
   }
-
-  // 2. Cria o novo usuário
-  // A criptografia da senha acontece automaticamente graças ao .pre('save') no seu model
   const newUser = await Usuario.create(data);
-  
-  // 3. Remove a senha do objeto antes de retornar
   const userObject = newUser.toObject();
   delete userObject.senha;
-
   return userObject;
 };
 
-// Função para fazer login de um usuário
-export const loginUser = async (data: Pick<IUsuario, 'email' | 'senha'>) => {
+// Função de login (ATUALIZADA)
+export const loginUser = async (data: Pick<IUsuario, "email" | "senha">) => {
   await dbConnect();
   const { email, senha } = data;
 
   if (!email || !senha) {
-    throw new Error('E-mail e senha são obrigatórios.');
+    throw new Error("E-mail e senha são obrigatórios.");
   }
 
-  // 1. Encontra o usuário pelo e-mail
-  // Usamos .select('+senha') para forçar o Mongoose a incluir o campo da senha,
-  // já que definimos `select: false` no schema.
-  const user = await Usuario.findOne({ email }).select('+senha');
+  const user = await Usuario.findOne({ email }).select("+senha");
   if (!user) {
-    throw new Error('Credenciais inválidas.'); // Mensagem genérica por segurança
+    throw new Error("Credenciais inválidas.");
   }
 
-  // 2. Compara a senha enviada com a senha hashada no banco
-  // Usamos o método `compareSenha` que você criou no model!
   const isMatch = await user.compareSenha(senha);
   if (!isMatch) {
-    throw new Error('Credenciais inválidas.'); // Mensagem genérica
+    throw new Error("Credenciais inválidas.");
   }
 
-  // 3. Se a senha está correta, gera um JWT
-  const token = jwt.sign(
-    { id: user._id, role: user.funcao }, // O que guardamos no token (payload)
-    process.env.JWT_SECRET!, // A chave secreta do .env
-    { expiresIn: '8h' } // Tempo de expiração do token
-  );
+  // --- 3. Geração de JWT ATUALIZADA para 'jose' ---
 
-  // 4. Prepara o objeto do usuário para retorno (sem a senha)
+  // 3.1. Valide e pegue a chave secreta do .env
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error("JWT_SECRET não está definido no .env.local");
+  }
+  const secretKey = new TextEncoder().encode(secret);
+
+  // 3.2. Crie o PAYLOAD COMPLETO que o dashboard espera
+  const payload = {
+    id: user._id.toString(),
+    email: user.email,
+    nome: user.nome,
+    funcao: user.funcao, // Usando 'funcao', como o dashboard espera
+  }; // 3.3. Crie o token usando 'jose'
+
+  const token = await new SignJWT(payload)
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("8h") // O mesmo '8h' que você já tinha
+    .sign(secretKey); // 4. Prepara o objeto do usuário para retorno (sem a senha)
+
   const userObject = user.toObject();
   delete userObject.senha;
 

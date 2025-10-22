@@ -1,0 +1,19 @@
+.container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr; /* Duas colunas */
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+/* Regra para telas menores (celular) */
+@media (max-width: 768px) {
+  .layout {
+    grid-template-columns: 1fr; /* Uma coluna só */
+  }
+}

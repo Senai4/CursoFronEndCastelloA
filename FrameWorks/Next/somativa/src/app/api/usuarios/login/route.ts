@@ -1,17 +1,34 @@
-import { NextResponse } from 'next/server';
-import * as UsuarioController from '@/controllers/UsuarioController';
+import { NextResponse } from "next/server";
+import { cookies } from "next/headers"; // Importe o 'cookies'
+import * as UsuarioController from "@/controllers/UsuarioController";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { email, senha } = body;
 
+    // Seu controller agora retorna o usuário e o token (criado com 'jose')
     const { user, token } = await UsuarioController.loginUser({ email, senha });
 
-    // Retorna os dados do usuário e o token de acesso
-    return NextResponse.json({ user, token });
+    // Configure o cookie com o token
+    (await
+      // Configure o cookie com o token
+      cookies()).set({
+      name: "auth-token", // O nome que o middleware está procurando
+      value: token,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 60 * 60 * 8, // 8 horas (mesmo tempo de expiração do token)
+    });
+
+    // Retorne apenas os dados do usuário. O token está no cookie.
+    return NextResponse.json({ user });
   } catch (error: any) {
-    // Retorna "Credenciais inválidas" para erros de login
-    return NextResponse.json({ message: error.message || 'Erro interno do servidor' }, { status: 401 });
+    // Retorna a mensagem de erro (ex: "Credenciais inválidas")
+    return NextResponse.json(
+      { message: error.message || "Erro interno do servidor" },
+      { status: 401 }
+    );
   }
 }

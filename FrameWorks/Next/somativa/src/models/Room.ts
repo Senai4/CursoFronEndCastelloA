@@ -1,29 +1,38 @@
-import mongoose, { Schema, Document, models, Model } from 'mongoose';
+import mongoose, { Schema, Document, models, Model } from "mongoose";
 
+// 1. MUDANÇA: Atualize a interface para usar os nomes em português
 export interface IRoom extends Document {
-  name: string;
-  capacity: number;
-  features: string[];
+  nome: string; // 'name' mudou para 'nome'
+  capacidade: number; // 'capacity' mudou para 'capacidade'
+  recursos: string[]; // 'features' mudou para 'recursos'
 }
 
-const RoomSchema: Schema = new Schema({
-  name: {
-    type: String,
-    required: [true, 'Please provide a room name.'],
-    unique: true,
+const RoomSchema: Schema = new Schema(
+  {
+    // 2. MUDANÇA: Atualize o Schema
+    nome: {
+      type: String,
+      required: [true, "Por favor, informe o nome da sala."], // 'name' mudou para 'nome'
+      unique: true,
+    },
+    capacidade: {
+      // 'capacity' mudou para 'capacidade'
+      type: Number,
+      required: [true, "Por favor, informe a capacidade da sala."],
+    },
+    recursos: {
+      // 'features' mudou para 'recursos'
+      type: [String],
+      default: [],
+    },
   },
-  capacity: {
-    type: Number,
-    required: [true, 'Please provide the room capacity.'],
-  },
-  features: {
-    type: [String], // Array de strings, ex: ["Projetor", "Quadro Branco", "Ar Condicionado"]
-    default: [],
-  },
-}, {
-  timestamps: true
-});
+  {
+    timestamps: true,
+  }
+);
 
-const Room: Model<IRoom> = models.Room || mongoose.model<IRoom>('Room', RoomSchema);
+// A exportação continua a mesma
+const Room: Model<IRoom> =
+  models.Room || mongoose.model<IRoom>("Room", RoomSchema);
 
 export default Room;

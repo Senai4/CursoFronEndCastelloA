@@ -1,5 +1,5 @@
 import dbConnect from '@/services/mongodb';
-import Reservation, { IReservation } from '@/models/Reservation';
+import Reservation, { IReservation } from '@/models/Reserva';
 import { startOfDay, endOfDay } from 'date-fns'; // Biblioteca para manipular datas
 
 // Função crucial: Verificar conflitos de horário com Mongoose

@@ -1,73 +1,61 @@
-'use client'; // Muito importante para usar hooks como useEffect e useRouter
+// app/dashboard/page.tsx
+// Este é um Server Component! Ele roda no servidor.
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { cookies } from 'next/headers';
+import { jwtVerify } from 'jose';
+import { redirect } from 'next/navigation';
 
-// Definimos um tipo para os dados do usuário para ser mais seguro
-interface UserData {
-    nome: string;
-    email: string;
-    funcao: 'admin' | 'user';
+// Importe os componentes que acabamos de criar
+import AdminDashboard from '../componentes/AdminDashboard'// (verifique o caminho, pode ser ../components/)
+import UserDashboard from '../componentes/UserDashboard'; // (verifique o caminho, pode ser ../components/)
+
+// Interface para o payload do seu token
+interface UserPayload {
+  id: string;
+  email: string;
+  nome: string;
+  funcao: 'admin' | 'user'; // A propriedade mais importante!
+  // ... (iat, exp, etc.)
 }
 
-export default function DashboardPage() {
-    const [user, setUser] = useState<UserData | null>(null);
-    const [loading, setLoading] = useState(true);
-    const router = useRouter();
+// Função helper para pegar o payload
+async function getPayloadFromToken(): Promise<UserPayload | null> {
+  const tokenCookie = (await cookies()).get('auth-token');
+  if (!tokenCookie) {
+    return null;
+  }
 
-    useEffect(() => {
-        // 1. Tenta pegar o token do localStorage
-        const token = localStorage.getItem('authToken');
-        const userDataString = localStorage.getItem('userData');
+  const JWT_SECRET_KEY = process.env.JWT_SECRET;
+  if (!JWT_SECRET_KEY) {
+    throw new Error('JWT_SECRET não está definido no .env.local');
+  }
+  const secret = new TextEncoder().encode(JWT_SECRET_KEY);
 
-        // 2. Se não houver token, chuta o usuário para a página de login
-        if (!token || !userDataString) {
-            router.push('/login');
-        } else {
-            // Se encontrou os dados, atualiza nosso estado com as infos do usuário
-            setUser(JSON.parse(userDataString));
-            setLoading(false); // Termina o carregamento
-        }
-    }, [router]); // O useEffect será re-executado se o router mudar
+  try {
+    const { payload } = await jwtVerify(tokenCookie.value, secret);
+    return payload as unknown as UserPayload;
+  } catch (error) {
+    console.error("Erro ao verificar token no dashboard:", error);
+    return null;
+  }
+}
 
-    // Função para fazer logout
-    const handleLogout = () => {
-        // Limpa o localStorage
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('userData');
-        // Redireciona para o login
-        router.push('/login');
-    };
 
-    // Enquanto a verificação do token estiver acontecendo, mostramos uma mensagem
-    if (loading) {
-        return <p>Verificando autenticação...</p>;
-    }
+// A Página Principal do Dashboard
+export default async function DashboardPage() {
+  const payload = await getPayloadFromToken();
 
-    // Se passou pela verificação, mostramos o conteúdo da página
-    return (
-        <div style={{ padding: '20px' }}>
-            <h1>Dashboard</h1>
-            {user && (
-                <div>
-                    <p>Seja bem-vindo(a), <strong>{user.nome}</strong>!</p>
-                    <p>Email: {user.email}</p>
-                    <p>Função: {user.funcao}</p>
-                </div>
-            )}
-            <button
-                onClick={handleLogout}
-                style={{ marginTop: '20px', padding: '10px', background: 'red', color: 'white', border: 'none', cursor: 'pointer' }}
-            >
-                Sair (Logout)
-            </button>
+  // Se o middleware falhou ou o token é inválido (segunda verificação)
+  if (!payload) {
+    redirect('/login');
+  }
 
-            {/* Aqui você começará a adicionar o conteúdo real do seu sistema */}
-            <div style={{ marginTop: '40px' }}>
-                <h2>Reservas do Dia</h2>
-                {/* Futuramente, aqui você fará uma chamada à API para buscar as salas e reservas */}
-                <p>Em breve: Visualização das salas e suas reservas.</p>
-            </div>
-        </div>
-    );
+  // O ROTEADOR DE PERMISSÃO
+  if (payload.funcao === 'admin') {
+    // Se for admin, mostre o painel de admin
+    return <AdminDashboard />;
+  } else {
+    // Para qualquer outra função, mostre o painel de usuário
+    return <UserDashboard />;
+  }
 }
