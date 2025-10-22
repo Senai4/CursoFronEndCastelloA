@@ -22,16 +22,14 @@ export default function CadastroPage() {
         setSuccess('');
 
         try {
-            // AJUSTE 1: A URL da API foi corrigida.
             const response = await fetch('/api/usuarios/cadastro', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                // AJUSTE 2: Os nomes dos campos foram corrigidos para bater com o backend.
                 body: JSON.stringify({
-                    nome: name,       // O estado 'name' é enviado como 'nome'
+                    nome: name,       
                     email: email,
-                    senha: password,  // O estado 'password' é enviado como 'senha'
-                    funcao: 'user'    // Adicionado o campo 'funcao', que é obrigatório no seu model
+                    senha: password,  
+                    funcao: 'user'    
                 }),
             });
 
