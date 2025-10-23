@@ -1,19 +1,22 @@
-"use client"; // Este componente terá botões e formulários
+"use client";
 
 import React from 'react';
-// Importe aqui seus componentes de CRUD de Salas, etc.
+import GerenciadorSalas from './GerenciadorSalas'; // 1. Importe o gerenciador
+import LogoutButton from './LogoutButton'; // 2. Importe o botão de Sair
+import styles from './UserDashboard.module.css'; // 3. Reutilize o estilo principal
 
 export default function AdminDashboard() {
   return (
-    <div>
+    // 4. Use o container e position:relative (para o botão de Sair)
+    <div className={styles.container} style={{ position: 'relative' }}>
+      <LogoutButton /> {/* 5. Adicione o botão de Sair */}
+
       <h1>Painel do Administrador</h1>
-      <p>Olá, admin! Você pode gerenciar as salas e reservas.</p>
-      
-      {/* Aqui você vai adicionar:
-        1. Um componente/formulário para CRIAR/EDITAR Salas.
-        2. Um componente que lista TODAS as reservas (de GET /api/reservas)
-           com botão para cancelar.
-      */}
+      <p>Olá, admin! Crie, edite ou delete as salas disponíveis.</p>
+
+      <hr style={{ margin: '2rem 0' }} />
+
+      <GerenciadorSalas /> {/* 6. Adicione o componente de gerenciamento */}
     </div>
   );
 }

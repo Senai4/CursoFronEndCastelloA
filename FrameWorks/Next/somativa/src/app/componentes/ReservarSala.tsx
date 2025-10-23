@@ -184,8 +184,8 @@ export default function ReservarSala() {
         )}
         <ul>
           {reservasDoDia.map((res) => (
-            <li key={res._id}>
-              <strong>{res.sala.nome}</strong>: ocupada das{' '}
+            <li key={res._id.toString()}>
+              <strong>{res.room.name}</strong>: ocupada das{' '}
               <strong>{formatarHora(res.dataInicio)}</strong> às{' '}
               <strong>{formatarHora(res.dataFim)}</strong>
               {' '}por {res.usuario.nome}

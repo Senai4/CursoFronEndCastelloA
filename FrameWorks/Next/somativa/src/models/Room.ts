@@ -9,19 +9,16 @@ export interface IRoom extends Document {
 
 const RoomSchema: Schema = new Schema(
   {
-    // 2. MUDANÇA: Atualize o Schema
     nome: {
       type: String,
       required: [true, "Por favor, informe o nome da sala."], // 'name' mudou para 'nome'
       unique: true,
     },
     capacidade: {
-      // 'capacity' mudou para 'capacidade'
       type: Number,
       required: [true, "Por favor, informe a capacidade da sala."],
     },
     recursos: {
-      // 'features' mudou para 'recursos'
       type: [String],
       default: [],
     },

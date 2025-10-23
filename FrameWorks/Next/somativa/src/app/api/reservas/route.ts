@@ -1,104 +1,102 @@
-import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { jwtVerify } from "jose";
-import dbConnect from "@/services/mongodb";
-import Reserva from "@/models/Reserva";
-import Sala from "@/models/Room"; // Importamos Sala para popular
-import Usuario from "@/models/Usuario"; // Importamos Usuário para popular
+// app/api/reservas/route.ts
 
-// Helper para pegar o ID do usuário logado a partir do token
+import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
+import { jwtVerify } from 'jose';
+import dbConnect from '@/services/mongodb';
+import Reserva from '@/models/Reserva';
+import Room from '@/models/Room';       // FIX 2: Importe o Room
+import Usuario from '@/models/Usuario'; // FIX 2: Importe o Usuario
+
+// Helper para pegar o ID do usuário (CORRIGIDO)
 async function getUserIdFromToken() {
-  const tokenCookie = (await cookies()).get("auth-token");
-  if (!tokenCookie) throw new Error("Token não encontrado");
-
+  // FIX 1: Adicionado (await ...)
+  const tokenCookie = (await cookies()).get('auth-token'); 
+  if (!tokenCookie) throw new Error('Token não encontrado');
+  
   const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
   const { payload } = await jwtVerify(tokenCookie.value, secret);
-
-  return payload.id as string; // Pegamos o ID do payload
+  return payload.id as string;
 }
 
-// --- POST: Criar uma nova reserva ---
+// --- POST: Criar uma nova reserva (CORRIGIDO) ---
 export async function POST(request: Request) {
   try {
     await dbConnect();
-    const userId = await getUserIdFromToken(); // Pega o usuário logado
+    const userId = await getUserIdFromToken(); // Agora funciona
     const body = await request.json();
+    
     const { sala, dataInicio, dataFim } = body;
 
-    // Converte as strings de data/hora em objetos Date
     const inicio = new Date(dataInicio);
     const fim = new Date(dataFim);
 
-    // --- LÓGICA DE CONFLITO (O requisito principal) ---
-    // Procura por qualquer reserva na MESMA SALA, que esteja CONFIRMADA,
-    // e que TENHA SOBREPOSIÇÃO de horário.
+    // Força o registro dos models (evita erro de populate)
+    const _ = Room.modelName;
+    const __ = Usuario.modelName;
+
     const conflito = await Reserva.findOne({
-      sala: sala,
-      status: "confirmada",
+      room: sala, 
+      status: 'confirmada',
       $or: [
-        // A nova reserva começa DURANTE uma existente
         { dataInicio: { $lt: fim }, dataFim: { $gt: inicio } },
-        // A nova reserva TERMINA DURANTE uma existente
-        // (Este $or cobre todos os casos de sobreposição)
-      ],
+      ]
     });
 
     if (conflito) {
-      // 409: Conflict
       return NextResponse.json(
-        {
-          message: "Horário indisponível. Já existe uma reserva neste período.",
-        },
+        { message: 'Horário indisponível. Já existe uma reserva neste período.' },
         { status: 409 }
       );
     }
 
-    // Se não houver conflito, cria a reserva
     const novaReserva = new Reserva({
-      sala,
+      room: sala, 
       usuario: userId,
       dataInicio: inicio,
-      dataFim: fim,
+      dataFim: fim
     });
 
     await novaReserva.save();
     return NextResponse.json(novaReserva, { status: 201 });
+
   } catch (error: any) {
-    if (error.message === "Token não encontrado") {
-      return NextResponse.json({ message: "Não autorizado" }, { status: 401 });
-    }
+    console.error('--- ERRO FATAL POST /api/reservas ---', error);
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
 
-// --- GET: Listar as reservas (para ver disponibilidade) ---
+// --- GET: Listar as reservas (CORRIGIDO) ---
 export async function GET(request: Request) {
   try {
     await dbConnect();
-
-    // Permite filtrar por data, ex: /api/reservas?data=2025-10-22
+    
     const { searchParams } = new URL(request.url);
-    const data = searchParams.get("data");
+    const data = searchParams.get('data');
 
-    let query: any = { status: "confirmada" };
+    const query: any = { status: 'confirmada' };
 
     if (data) {
-      const dataInicio = new Date(data); // ex: 2025-10-22T00:00:00
-      dataInicio.setUTCHours(0, 0, 0, 0); // Começo do dia em UTC
-
+      const dataInicio = new Date(data);
+      dataInicio.setUTCHours(0, 0, 0, 0); 
       const dataFim = new Date(data);
-      dataFim.setUTCHours(23, 59, 59, 999); // Fim do dia em UTC
-
+      dataFim.setUTCHours(23, 59, 59, 999);
       query.dataInicio = { $gte: dataInicio, $lte: dataFim };
     }
 
+    // FIX 2: Força o registro dos models ANTES da query
+    const _ = Room.modelName;
+    const __ = Usuario.modelName;
+
     const reservas = await Reserva.find(query)
-      .populate("room", "nome") // Puxa o nome da sala
-      .populate("usuario", "nome email") // Puxa nome/email do usuário
-      .sort({ dataInicio: 1 }); // Ordena por hora de início
+      .populate('room', 'name') 
+      .populate('usuario', 'nome email') // Agora funciona
+      .sort({ dataInicio: 1 }); 
 
     return NextResponse.json(reservas);
+
   } catch (error: any) {
+    console.error('--- ERRO FATAL GET /api/reservas ---', error);
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
