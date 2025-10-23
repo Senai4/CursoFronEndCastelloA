@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+// Importando o CSS que criamos (assumindo que está na pasta 'componentes')
+import styles from './MinhasReservas.module.css';
 
 // Interface simples para os dados que esperamos
 interface MinhaReserva {
@@ -8,9 +10,8 @@ interface MinhaReserva {
   dataInicio: string;
   dataFim: string;
   room: {
-    // Esperamos o objeto 'room' populado
     _id: string;
-    name: string;
+    nome: string; // <-- 1. CORREÇÃO: de 'name' para 'nome'
   };
 }
 
@@ -23,7 +24,13 @@ const formatarDataHora = (data: string) => {
   });
 };
 
-export default function MinhasReservas() {
+// 2. DEFINA AS PROPS que o componente vai receber do "Pai"
+interface MinhasReservasProps {
+  refreshTrigger: number;
+}
+
+// 3. RECEBA AS PROPS aqui
+export default function MinhasReservas({ refreshTrigger }: MinhasReservasProps) {
   const [reservas, setReservas] = useState<MinhaReserva[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -36,7 +43,7 @@ export default function MinhasReservas() {
       setError(null);
       setSuccess(null);
 
-      const response = await fetch("/api/reservas/minhas"); // API da Etapa 1
+      const response = await fetch("/api/reservas/minhas");
       if (!response.ok) throw new Error("Falha ao buscar suas reservas");
 
       const data: MinhaReserva[] = await response.json();
@@ -51,7 +58,9 @@ export default function MinhasReservas() {
   // --- Efeito para buscar ao carregar ---
   useEffect(() => {
     fetchMinhasReservas();
-  }, []);
+    // 4. ATUALIZE O ARRAY DE DEPENDÊNCIAS
+    // Isso força o 'fetch' a rodar de novo sempre que o 'refreshTrigger' mudar
+  }, [refreshTrigger]);
 
   // --- Função para CANCELAR uma reserva ---
   const handleCancelar = async (reservaId: string) => {
@@ -65,7 +74,6 @@ export default function MinhasReservas() {
       setSuccess(null);
 
       const response = await fetch(`/api/reservas/${reservaId}`, {
-        // API da Etapa 2
         method: "DELETE",
       });
 
@@ -73,7 +81,7 @@ export default function MinhasReservas() {
       if (!response.ok) throw new Error(data.message || "Falha ao cancelar");
 
       setSuccess("Reserva cancelada com sucesso!");
-      // Atualiza a lista, removendo a reserva cancelada
+      // A lógica aqui já estava correta:
       fetchMinhasReservas();
     } catch (err: any) {
       setError(err.message);
@@ -83,40 +91,33 @@ export default function MinhasReservas() {
   };
 
   return (
-    <section>
-      <hr style={{ margin: "2rem 0" }} />
+    // 5. Aplicando as classes de CSS que criamos
+    <section className={styles.card}>
       <h2>Minhas Próximas Reservas</h2>
 
       {loading && <p>Carregando...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>{success}</p>}
+      {error && <p className={styles.error}>{error}</p>}
+      {success && <p className={styles.success}>{success}</p>}
 
       {reservas.length === 0 && !loading && (
         <p>Você não possui reservas futuras.</p>
       )}
 
-      <ul style={{ listStyle: "none", padding: 0 }}>
+      <ul className={styles.list}>
         {reservas.map((res) => (
           <li
-            key={res._id}
-            style={{
-              border: "1px solid #ccc",
-              padding: "1rem",
-              marginBottom: "1rem",
-            }}
+            key={res._id.toString()} // 6. CORREÇÃO: Adicionado .toString()
+            className={styles.listItem}
           >
-            <strong>Sala: {res.room.name}</strong>
-            <p>De: {formatarDataHora(res.dataInicio)}</p>
-            <p>Até: {formatarDataHora(res.dataFim)}</p>
+            <div className={styles.info}>
+              <strong>Sala: {res.room.nome}</strong> {/* 7. CORREÇÃO: de 'name' para 'nome' */}
+              <p>De: {formatarDataHora(res.dataInicio)}</p>
+              <p>Até: {formatarDataHora(res.dataFim)}</p>
+            </div>
             <button
-              onClick={() => handleCancelar(res._id)}
+              onClick={() => handleCancelar(res._id.toString())} // 8. CORREÇÃO: Adicionado .toString()
               disabled={loading}
-              style={{
-                backgroundColor: "red",
-                color: "white",
-                border: "none",
-                padding: "0.5rem",
-              }}
+              className={styles.cancelButton}
             >
               Cancelar Reserva
             </button>
