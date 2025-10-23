@@ -1,6 +1,6 @@
 .card {
   background-color: #f9f9f9;
-  border: 1px solid #eee;
+  border: 2px solid #477fb3;
   border-radius: 8px;
   padding: 1.5rem;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
@@ -13,7 +13,7 @@
 }
 
 .listItem {
-  border: 1px solid #ddd;
+  border: 2px solid #477fb3;
   border-radius: 4px;
   padding: 1rem;
   margin-bottom: 1rem;
@@ -37,7 +37,7 @@
   font-size: 0.9rem;
   font-weight: 600;
   color: white;
-  background-color: #e53e3e; /* Vermelho */
+  background-color: #477fb3;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -45,5 +45,7 @@
 }
 
 .cancelButton:hover {
-  background-color: #c53030;
+  border: solid 2px #477fb3;
+  background-color: white;
+  color: #477fb3;
 }

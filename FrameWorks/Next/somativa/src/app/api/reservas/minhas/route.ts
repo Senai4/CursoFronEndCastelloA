@@ -32,7 +32,7 @@ export async function GET() {
     const minhasReservas = await Reserva.find({
       usuario: userId,
       status: "confirmada",
-      dataInicio: { $gte: new Date() },
+      // dataInicio: { $gte: new Date() },
     })
       .populate("room", "name")
       .sort({ dataInicio: 1 });

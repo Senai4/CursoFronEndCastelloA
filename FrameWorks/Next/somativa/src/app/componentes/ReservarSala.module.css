@@ -14,13 +14,14 @@
   display: block;
   font-weight: 600;
   margin-bottom: 0.5rem;
+  border: 2px solid #477fb3;
 }
 
 .formGroup input,
 .formGroup select {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #ddd;
+  border: 2px solid #477fb3;
   border-radius: 4px;
   font-size: 1rem;
 }
@@ -31,7 +32,7 @@
   font-size: 1rem;
   font-weight: 600;
   color: white;
-  background-color: #0070f3; /* Azul do Next/Vercel */
+  background-color: #0070f3;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -48,11 +49,10 @@
 }
 
 .error {
-  color: #e53e3e; /* Vermelho */
-  margin-top: 1rem;
+  color: #e53e3e; 
 }
 
 .success {
-  color: #38a169; /* Verde */
+  color: #38a169; 
   margin-top: 1rem;
 }

@@ -41,7 +41,7 @@ export default function LogoutButton() {
 
     return (
         <button onClick={handleLogout} style={buttonStyle}>
-            Sair (Logout)
+            Logout
         </button>
     );
 }
