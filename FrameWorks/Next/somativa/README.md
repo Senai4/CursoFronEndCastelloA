@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Projeto: Sistema de Reserva de Salas (Connect Coworking)
 
-## Getting Started
+Este projeto é um sistema full-stack de gerenciamento e reserva de salas, construído com o framework Next.js (App Router).
 
-First, run the development server:
+O objetivo foi criar uma aplicação que substituísse um sistema antigo de reservas por e-mail, resolvendo problemas de conflito de agendamento e permitindo o gerenciamento das salas.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## O que foi feito (Funcionalidades Principais)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Para atender aos requisitos, o projeto foi dividido em duas áreas principais, controladas por um sistema de autenticação baseado em papéis (Roles).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Autenticação e Papéis (Roles)
 
-## Learn More
+* **Login e Cadastro:** Usuários podem se cadastrar e fazer login. As senhas são criptografadas com `bcrypt`.
+* **Autorização com JWT:** O acesso às páginas e APIs é protegido usando JSON Web Tokens.
+* **Middleware de Rota:** Um `middleware.ts` centralizado protege as rotas. Ele redireciona usuários não logados e bloqueia o acesso a rotas de "Admin" por "Usuários Comuns".
+* **Dois Papéis:**
+    * `user` (Usuário Comum): Pode ver e reservar.
+    * `admin` (Administrador): Pode gerenciar tudo.
 
-To learn more about Next.js, take a look at the following resources:
+### 2. Painel do Administrador (`/dashboard` para Admins)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+O admin tem controle total sobre o sistema:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+* **Gerenciamento de Salas (CRUD):**
+    * **Criar:** Adicionar novas salas (nome, capacidade, recursos).
+    * **Ler:** Ver a lista de salas existentes.
+    * **Atualizar:** Editar os dados de uma sala.
+    * **Deletar:** Remover uma sala do sistema.
+* **Gerenciamento de Reservas:**
+    * O admin pode ver **todas** as reservas de **todos** os usuários.
+    * O admin pode cancelar (deletar) qualquer reserva no sistema.
 
-## Deploy on Vercel
+### 3. Painel do Usuário Comum (`/dashboard` para Usuários)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+O usuário comum tem uma interface focada na reserva:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* **Listagem de Salas:** O usuário vê um formulário de reserva com a lista de salas disponíveis (criadas pelo admin).
+* **Ver Disponibilidade:** Ao selecionar uma data, o sistema busca e mostra (em uma lista) todos os horários **já ocupados** para aquele dia.
+* **Criar Reserva (com Anti-Conflito):**
+    * O usuário seleciona a sala, data e horários.
+    * A API `POST /api/reservas` verifica se aquele horário já está ocupado.
+    * Se houver conflito, o sistema retorna um erro (`409 Conflict`) e avisa o usuário.
+    * Se estiver livre, a reserva é criada.
+* **Ver Minhas Reservas:**
+    * O usuário vê uma lista de suas **próprias** reservas futuras (a partir do dia de hoje).
+    * **Sincronização de Estado:** A lista de "Minhas Reservas" e a lista de "Disponibilidade" são atualizadas automaticamente (sem precisar de F5) quando o usuário cria ou cancela uma reserva.
+* **Cancelar Reserva:** O usuário pode cancelar suas próprias reservas.
+
+---
+
+## Tecnologias Utilizadas
+
+* **Framework:** Next.js 14+ (App Router)
+* **Linguagem:** TypeScript
+* **Banco de Dados:** MongoDB
+* **ORM / Modelagem:** Mongoose
+* **API:** Next.js Route Handlers (API RESTful)
+* **Autenticação:** JWT (com `jose`) e `bcrypt`
+* **Estilização:** CSS Modules
+
+## Colocando o Link da Prototipagem
+
+## https://www.figma.com/design/GJggMGL1B8lIfrtbR0CzpB/Untitled?node-id=0-1&t=pGdZkthnBvbKWnHA-1

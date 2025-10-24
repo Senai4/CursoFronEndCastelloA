@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { IRoom } from '@/models/Room'; // Importe a interface do seu model
-// Vamos usar o mesmo CSS do formulário de reserva para manter o padrão
+import { IRoom } from '@/models/Room'; 
 import styles from './ReservarSala.module.css';
 
 export default function GerenciadorSalas() {
@@ -11,23 +10,22 @@ export default function GerenciadorSalas() {
     // Estados para o formulário
     const [name, setName] = useState('');
     const [capacity, setCapacity] = useState(1);
-    const [features, setFeatures] = useState(''); // String separada por vírgula
-    const [editingId, setEditingId] = useState<string | null>(null); // Controla se estamos editando
+    const [features, setFeatures] = useState(''); 
+    const [editingId, setEditingId] = useState<string | null>(null); 
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
 
-    // --- 1. BUSCAR as salas (GET /api/rooms) ---
+    // BUSCAR as salas 
     const fetchRooms = async () => {
         try {
             setLoading(true);
-            const response = await fetch('/api/rooms'); // API que você já criou
+            const response = await fetch('/api/rooms'); 
             if (!response.ok) throw new Error('Falha ao buscar salas');
 
             const data: IRoom[] = await response.json();
             setRooms(data);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -39,7 +37,7 @@ export default function GerenciadorSalas() {
         fetchRooms();
     }, []);
 
-    // --- 2. Limpar o formulário ---
+    //Limpar o formulário 
     const resetForm = () => {
         setName('');
         setCapacity(1);
@@ -47,7 +45,7 @@ export default function GerenciadorSalas() {
         setEditingId(null);
     };
 
-    // --- 3. CRIAR (POST) ou ATUALIZAR (PUT) ---
+    // CRIAR (POST) ou ATUALIZAR (PUT) 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
@@ -55,7 +53,7 @@ export default function GerenciadorSalas() {
 
         const listaRecursos = features.split(',').map(r => r.trim()).filter(r => r);
 
-        // Nomes do seu model: name, capacity, features
+        // Nomes do seu model
         const roomData = {
             name: name,
             capacity: capacity,
@@ -82,17 +80,16 @@ export default function GerenciadorSalas() {
             resetForm();
             fetchRooms(); // Atualiza a lista
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             setError(err.message);
         }
     };
 
-    // --- 4. DELETAR (DELETE) ---
+    // DELETAR 
     const handleDelete = async (roomId: string) => {
         if (confirm('Tem certeza que deseja deletar esta sala?')) {
             try {
-                const response = await fetch(`/api/rooms/${roomId}`, { // API da Etapa 1
+                const response = await fetch(`/api/rooms/${roomId}`, { 
                     method: 'DELETE',
                 });
 
@@ -104,23 +101,22 @@ export default function GerenciadorSalas() {
                 setSuccess('Sala deletada com sucesso!');
                 fetchRooms(); // Atualiza a lista
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (err: any) {
                 setError(err.message);
             }
         }
     };
 
-    // --- 5. Carregar dados para EDIÇÃO ---
+    // Carregar dados para EDIÇÃO
     const handleEdit = (room: IRoom) => {
-        setEditingId(String(room._id)); // Converta para string para garantir
-        setName(room.nome);       // MUDANÇA: de 'name' para 'nome'
-        setCapacity(room.capacidade); // MUDANÇA: de 'capacity' para 'capacidade'
-        setFeatures(room.recursos.join(', ')); // MUDANÇA: de 'features' para 'recursos'
+        setEditingId(String(room._id)); 
+        setName(room.nome);       
+        setCapacity(room.capacidade);
+        setFeatures(room.recursos.join(', ')); 
     };
 
     return (
-        <section className={styles.card}> {/* Reutilizando o estilo */}
+        <section className={styles.card}>
             <h2>Gerenciar Salas</h2>
 
             <form onSubmit={handleSubmit}>
@@ -145,7 +141,7 @@ export default function GerenciadorSalas() {
                     {editingId ? 'Atualizar Sala' : 'Criar Sala'}
                 </button>
                 {editingId && (
-                    <button type="button" onClick={resetForm} style={{ marginLeft: '1rem' }}>
+                    <button type="button" onClick={resetForm} style={{ width: '100%', height: '43px', backgroundColor: '#477fb3', border: '1px solid #eee', color: 'white', fontSize: '1rem', fontWeight: '600', borderRadius: '4px', cursor: 'pointer' }}>
                         Cancelar Edição
                     </button>
                 )}
@@ -160,15 +156,13 @@ export default function GerenciadorSalas() {
             {loading && <p>Carregando salas...</p>}
             <ul>
                 {rooms.map((room) => (
-                    <li key={String(room._id)} style={{ borderBottom: '1px solid #eee', padding: '1rem 0' }}>
-                        {/* MUDANÇA AQUI 👇 */}
+                    <li key={String(room._id)} style={{ borderBottom: '1px solid #eee', padding: '1rem 0', }}>
                         <strong>{room.nome}</strong> (Cap: {room.capacidade})
 
-                        {/* MUDANÇA AQUI 👇 */}
                         <p style={{ margin: '0.25rem 0' }}>Recursos: {room.recursos.join(', ') || 'Nenhum'}</p>
 
                         <div>
-                            <button onClick={() => handleEdit(room)} style={{ marginRight: '0.5rem' }}>
+                            <button onClick={() => handleEdit(room)} style={{ marginRight: '0.5rem',}}>
                                 Editar
                             </button>
                             <button onClick={() => handleDelete(String(room._id))} style={{ backgroundColor: 'darkred', color: 'white', border: 'none' }}>

@@ -1,9 +1,8 @@
-// middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
-const JWT_SECRET_KEY = process.env.JWT_SECRET; // Pegue do seu .env.local
+const JWT_SECRET_KEY = process.env.JWT_SECRET; 
 
 if (!JWT_SECRET_KEY) {
   throw new Error("JWT_SECRET não está definido no .env.local");
@@ -12,7 +11,7 @@ const secret = new TextEncoder().encode(JWT_SECRET_KEY);
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const tokenCookie = request.cookies.get("auth-token"); // O nome do cookie que vc criou no login
+  const tokenCookie = request.cookies.get("auth-token"); 
 
   // Se o usuário está tentando acessar o dashboard sem token
   if (pathname.startsWith("/dashboard") && !tokenCookie) {

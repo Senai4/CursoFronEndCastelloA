@@ -1,24 +1,17 @@
-// app/dashboard/page.tsx
-// Este é um Server Component! Ele roda no servidor.
-
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
 import { redirect } from 'next/navigation';
+import AdminDashboard from '../componentes/AdminDashboard'
+import UserDashboard from '../componentes/UserDashboard'; 
 
-// Importe os componentes que acabamos de criar
-import AdminDashboard from '../componentes/AdminDashboard'// (verifique o caminho, pode ser ../components/)
-import UserDashboard from '../componentes/UserDashboard'; // (verifique o caminho, pode ser ../components/)
-
-// Interface para o payload do seu token
 interface UserPayload {
   id: string;
   email: string;
   nome: string;
-  funcao: 'admin' | 'user'; // A propriedade mais importante!
-  // ... (iat, exp, etc.)
+  funcao: 'admin' | 'user';
 }
 
-// Função helper para pegar o payload
+
 async function getPayloadFromToken(): Promise<UserPayload | null> {
   const tokenCookie = (await cookies()).get('auth-token');
   if (!tokenCookie) {
@@ -45,7 +38,7 @@ async function getPayloadFromToken(): Promise<UserPayload | null> {
 export default async function DashboardPage() {
   const payload = await getPayloadFromToken();
 
-  // Se o middleware falhou ou o token é inválido (segunda verificação)
+  // Se o middleware falhou ou o token é inválido
   if (!payload) {
     redirect('/login');
   }

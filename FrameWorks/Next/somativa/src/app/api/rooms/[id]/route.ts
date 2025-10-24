@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/services/mongodb';
-import Room from '@/models/Room'; // Importa o model Room
+import Room from '@/models/Room'; 
 
-// --- PUT: Atualizar uma sala (Admin) ---
+
 export async function PUT(
   request: Request,
   { params }: { params: { id: string } }
@@ -10,12 +10,12 @@ export async function PUT(
   try {
     await dbConnect();
     const roomId = params.id;
-    const body = await request.json(); // { name, capacity, features }
+    const body = await request.json();
     
     const updatedRoom = await Room.findByIdAndUpdate(
       roomId,
       body,
-      { new: true, runValidators: true } // Opções: retornar doc novo, rodar validadores
+      { new: true, runValidators: true } 
     );
 
     if (!updatedRoom) {
@@ -29,7 +29,7 @@ export async function PUT(
   }
 }
 
-// --- DELETE: Deletar uma sala (Admin) ---
+// DELETE
 export async function DELETE(
   request: Request,
   { params }: { params: { id: string } }
@@ -37,9 +37,6 @@ export async function DELETE(
   try {
     await dbConnect();
     const roomId = params.id;
-
-    // TODO: Adicionar lógica para não deletar se houver reservas futuras
-    
     const deletedRoom = await Room.findByIdAndDelete(roomId);
 
     if (!deletedRoom) {

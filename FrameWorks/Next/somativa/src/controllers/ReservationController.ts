@@ -1,27 +1,25 @@
 import dbConnect from '@/services/mongodb';
-import Reservation, { IReservation } from '@/models/Reserva';
-import { startOfDay, endOfDay } from 'date-fns'; // Biblioteca para manipular datas
+import Reservation, { IReserva } from '@/models/Reserva';
+import { startOfDay, endOfDay } from 'date-fns'; 
 
-// Função crucial: Verificar conflitos de horário com Mongoose
 const checkForConflict = async (roomId: string, startTime: Date, endTime: Date): Promise<boolean> => {
   const existingReservation = await Reservation.findOne({
     room: roomId,
     $or: [
-      // A reserva existente começa durante a nova reserva
+     
       { startTime: { $gte: startTime, $lt: endTime } },
-      // A reserva existente termina durante a nova reserva
+     
       { endTime: { $gt: startTime, $lte: endTime } },
-      // A nova reserva está completamente contida dentro de uma reserva existente
       { startTime: { $lte: startTime }, endTime: { $gte: endTime } }
     ]
   });
 
-  return !!existingReservation; // Retorna true se encontrou algo, ou seja, há conflito
+  return !!existingReservation; 
 };
 
 
 // Criar uma nova reserva
-export const createReservation = async (data: { user: string; room: string; startTime: Date; endTime: Date }): Promise<IReservation> => {
+export const createReservation = async (data: { user: string; room: string; startTime: Date; endTime: Date }): Promise<IReserva> => {
   await dbConnect();
   const { user, room, startTime, endTime } = data;
   

@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers"; // Importe o 'cookies'
+import { cookies } from "next/headers"; 
 import * as UsuarioController from "@/controllers/UsuarioController";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { email, senha } = body;
-
-    // Seu controller agora retorna o usuário e o token (criado com 'jose')
     const { user, token } = await UsuarioController.loginUser({ email, senha });
 
     // Configure o cookie com o token
@@ -25,7 +23,7 @@ export async function POST(request: Request) {
     // Retorne apenas os dados do usuário. O token está no cookie.
     return NextResponse.json({ user });
   } catch (error: any) {
-    // Retorna a mensagem de erro (ex: "Credenciais inválidas")
+    // Retorna a mensagem de erro 
     return NextResponse.json(
       { message: error.message || "Erro interno do servidor" },
       { status: 401 }

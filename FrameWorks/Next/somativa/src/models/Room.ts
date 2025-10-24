@@ -1,17 +1,16 @@
 import mongoose, { Schema, Document, models, Model } from "mongoose";
 
-// 1. MUDANÇA: Atualize a interface para usar os nomes em português
 export interface IRoom extends Document {
-  nome: string; // 'name' mudou para 'nome'
-  capacidade: number; // 'capacity' mudou para 'capacidade'
-  recursos: string[]; // 'features' mudou para 'recursos'
+  nome: string; 
+  capacidade: number; 
+  recursos: string[]; 
 }
 
 const RoomSchema: Schema = new Schema(
   {
     nome: {
       type: String,
-      required: [true, "Por favor, informe o nome da sala."], // 'name' mudou para 'nome'
+      required: [true, "Por favor, informe o nome da sala."], 
       unique: true,
     },
     capacidade: {
@@ -28,7 +27,6 @@ const RoomSchema: Schema = new Schema(
   }
 );
 
-// A exportação continua a mesma
 const Room: Model<IRoom> =
   models.Room || mongoose.model<IRoom>("Room", RoomSchema);
 

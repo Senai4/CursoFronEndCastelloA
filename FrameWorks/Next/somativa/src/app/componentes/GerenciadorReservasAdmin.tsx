@@ -1,31 +1,30 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import styles from './MinhasReservas.module.css'; // Reutilizando o CSS
+import styles from './MinhasReservas.module.css'; 
 
-// Helper para formatar Data
 const getHojeFormatado = () => {
     return new Date().toISOString().split('T')[0];
 };
 
-// Helper para formatar Data e Hora
+// formatar Data e Hora
 const formatarDataHora = (data: string) => {
     return new Date(data).toLocaleString('pt-BR', {
         dateStyle: 'short',
         timeStyle: 'short',
-        timeZone: 'UTC' // Ajuste se necessário
+        timeZone: 'UTC' 
     });
 };
 
 export default function GerenciadorReservasAdmin() {
-    const [reservas, setReservas] = useState<any[]>([]); // 'any' para dados populados
-    const [data, setData] = useState(getHojeFormatado()); // Estado para o seletor de data
+    const [reservas, setReservas] = useState<any[]>([]);
+    const [data, setData] = useState(getHojeFormatado());
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
 
-    // --- 1. Função para BUSCAR TODAS as reservas de um dia ---
+    // Função para BUSCAR TODAS as reservas de um dia 
     const fetchTodasReservas = async (dataSelecionada: string) => {
         try {
             setLoading(true);
@@ -45,12 +44,12 @@ export default function GerenciadorReservasAdmin() {
         }
     };
 
-    // --- Efeito para buscar ao carregar e ao mudar a data ---
+    // Efeito para buscar ao carregar e ao mudar a data 
     useEffect(() => {
         fetchTodasReservas(data);
     }, [data]); // Roda toda vez que o admin mudar a data
 
-    // --- 2. Função para CANCELAR (exatamente a mesma do usuário) ---
+    // Função para CANCELAR 
     const handleCancelar = async (reservaId: string) => {
         if (!confirm('ADMIN: Tem certeza que deseja cancelar esta reserva?')) {
             return;
@@ -78,7 +77,7 @@ export default function GerenciadorReservasAdmin() {
 
     return (
         <section className={styles.card} style={{ marginTop: '2rem' }}>
-            <h2>Gerenciar Reservas (Admin)</h2>
+            <h2>Gerenciar Reservas</h2>
 
             <div style={{ margin: '1rem 0' }}>
                 <label htmlFor="dataAdmin" style={{ marginRight: '1rem' }}>Ver reservas do dia:</label>
@@ -103,7 +102,6 @@ export default function GerenciadorReservasAdmin() {
                 {reservas.map((res) => (
                     <li key={res._id} className={styles.listItem}>
                         <div className={styles.info}>
-                            {/* O Admin vê QUEM reservou */}
                             <p><strong>Usuário: {res.usuario.nome}</strong> ({res.usuario.email})</p>
                             <p><strong>Sala: {res.room.name}</strong></p>
                             <p>De: {formatarDataHora(res.dataInicio)}</p>
@@ -114,7 +112,7 @@ export default function GerenciadorReservasAdmin() {
                             disabled={loading}
                             className={styles.cancelButton}
                         >
-                            Cancelar (Admin)
+                            Cancelar
                         </button>
                     </li>
                 ))}

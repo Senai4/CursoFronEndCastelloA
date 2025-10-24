@@ -1,16 +1,14 @@
-// app/api/reservas/route.ts
-
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
 import dbConnect from '@/services/mongodb';
 import Reserva from '@/models/Reserva';
-import Room from '@/models/Room';       // FIX 2: Importe o Room
-import Usuario from '@/models/Usuario'; // FIX 2: Importe o Usuario
+import Room from '@/models/Room';       
+import Usuario from '@/models/Usuario'; 
 
-// Helper para pegar o ID do usuário (CORRIGIDO)
+
 async function getUserIdFromToken() {
-  // FIX 1: Adicionado (await ...)
+ 
   const tokenCookie = (await cookies()).get('auth-token'); 
   if (!tokenCookie) throw new Error('Token não encontrado');
   
@@ -19,11 +17,10 @@ async function getUserIdFromToken() {
   return payload.id as string;
 }
 
-// --- POST: Criar uma nova reserva (CORRIGIDO) ---
 export async function POST(request: Request) {
   try {
     await dbConnect();
-    const userId = await getUserIdFromToken(); // Agora funciona
+    const userId = await getUserIdFromToken(); 
     const body = await request.json();
     
     const { sala, dataInicio, dataFim } = body;
@@ -31,7 +28,7 @@ export async function POST(request: Request) {
     const inicio = new Date(dataInicio);
     const fim = new Date(dataFim);
 
-    // Força o registro dos models (evita erro de populate)
+    
     const _ = Room.modelName;
     const __ = Usuario.modelName;
 
@@ -66,7 +63,6 @@ export async function POST(request: Request) {
   }
 }
 
-// --- GET: Listar as reservas (CORRIGIDO) ---
 export async function GET(request: Request) {
   try {
     await dbConnect();
@@ -84,13 +80,12 @@ export async function GET(request: Request) {
       query.dataInicio = { $gte: dataInicio, $lte: dataFim };
     }
 
-    // FIX 2: Força o registro dos models ANTES da query
     const _ = Room.modelName;
     const __ = Usuario.modelName;
 
     const reservas = await Reserva.find(query)
       .populate('room', 'name') 
-      .populate('usuario', 'nome email') // Agora funciona
+      .populate('usuario', 'nome email') 
       .sort({ dataInicio: 1 }); 
 
     return NextResponse.json(reservas);

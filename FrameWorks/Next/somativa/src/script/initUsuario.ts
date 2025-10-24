@@ -2,7 +2,6 @@ import Usuario from "@/models/Usuario";
 import connectMongo from "@/services/mongodb";
 import mongoose from "mongoose";
 
-// 1. Sua função original, sem alterações
 export const criarAdmin = async () => {
   await connectMongo();
   const adminEmail = "admin@admin.com";

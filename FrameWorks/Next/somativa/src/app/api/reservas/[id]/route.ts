@@ -4,7 +4,6 @@ import { jwtVerify } from "jose";
 import dbConnect from "@/services/mongodb";
 import Reserva from "@/models/Reserva";
 
-// Helper para pegar o PAYLOAD do usuário (ID e Função)
 async function getUserPayloadFromToken() {
   const tokenCookie = (await cookies()).get("auth-token");
   if (!tokenCookie) throw new Error("Token não encontrado");
@@ -18,7 +17,6 @@ async function getUserPayloadFromToken() {
   };
 }
 
-// --- DELETE: Cancelar uma reserva ---
 export async function DELETE(
   request: Request,
   { params }: { params: { id: string } }
@@ -26,7 +24,7 @@ export async function DELETE(
   try {
     await dbConnect();
     const { userId, userFuncao } = await getUserPayloadFromToken();
-    const reservaId = params.id; // ID da reserva vindo da URL
+    const reservaId = params.id; 
 
     const reserva = await Reserva.findById(reservaId);
 
@@ -37,19 +35,15 @@ export async function DELETE(
       );
     }
 
-    // --- LÓGICA DE PERMISSÃO ---
-    // O usuário é admin? OU
-    // O usuário é o dono da reserva?
+    
     if (userFuncao === "admin" || reserva.usuario.toString() === userId) {
-      // Em vez de deletar, atualizamos o status para 'cancelada'
-      // Isso mantém o histórico no banco.
+    
       reserva.status = "cancelada";
       await reserva.save();
 
       return NextResponse.json({ message: "Reserva cancelada com sucesso" });
     } else {
-      // Se não for admin E não for o dono
-      return NextResponse.json({ message: "Não autorizado" }, { status: 403 }); // 403: Forbidden
+      return NextResponse.json({ message: "Não autorizado" }, { status: 403 }); 
     }
   } catch (error: any) {
     if (error.message === "Token não encontrado") {
